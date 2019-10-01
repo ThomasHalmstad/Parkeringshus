@@ -62,7 +62,6 @@ namespace Parkeringshus
                                                  @Description,
                                                  @Arrival)";
 
-
                             SqlConnection connection = new SqlConnection(connectionString);
                             SqlCommand command = new SqlCommand(query, connection);
 
@@ -91,7 +90,37 @@ namespace Parkeringshus
                     case ConsoleKey.NumPad2:
                         {
 
+                            Write("Registration number: ");
+
+                            string registrationNumber = ReadLine();
+
+                            DateTime departure = DateTime.Now;
+
+                            string query = @"UPDATE Parking
+                                           SET Departure = @Departure
+                                           WHERE RegistrationNumber = @RegistrationNumber
+                                           AND Departure IS NULL";
+
+                            SqlConnection connection = new SqlConnection(connectionString);
+                            SqlCommand command = new SqlCommand(query, connection);
+
+                            command.Parameters.AddWithValue("Departure", departure);
+                            command.Parameters.AddWithValue("RegistrationNumber", registrationNumber);
+
+                            connection.Open();
+
+                            command.ExecuteNonQuery();
+
+                            connection.Close();
+
                         }
+
+                        Clear();
+
+                        WriteLine("Departure registered");
+
+                        Thread.Sleep(2000);
+
                         break;
 
                     case ConsoleKey.D3:
@@ -126,7 +155,7 @@ namespace Parkeringshus
 
 
                                 Write(id.PadRight(5, ' '));
-                                Write(registrationNumber.PadRight(20, ' '));
+                                Write(registrationNumber.PadRight(24, ' '));
                                 Write(arrival.PadRight(20, ' '));
                                 WriteLine(departure);
 
@@ -137,9 +166,6 @@ namespace Parkeringshus
                             WriteLine("Press key to continue");
 
                             ReadKey(true);
-
-
-
 
                         break;
 
