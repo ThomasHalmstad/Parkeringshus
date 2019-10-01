@@ -31,26 +31,27 @@ namespace Parkeringshus
                 {
                     case ConsoleKey.D1:
                     case ConsoleKey.NumPad1:
+                        {
 
-                        Write("Customer: ");
+                            Write("Customer: ");
 
-                        string customer = ReadLine();
+                            string customer = ReadLine();
 
-                        Write("Contact details: ");
+                            Write("Contact details: ");
 
-                        string contactDetails = ReadLine();
+                            string contactDetails = ReadLine();
 
-                        Write("Registration number: ");
+                            Write("Registration number: ");
 
-                        string registrationNumber = ReadLine();
+                            string registrationNumber = ReadLine();
 
-                        Write("Description: ");
+                            Write("Description: ");
 
-                        string description = ReadLine();
+                            string description = ReadLine();
 
-                        DateTime arrival = DateTime.Now;
+                            DateTime arrival = DateTime.Now;
 
-                        string query = @"INSERT INTO Parking (Customer,
+                            string query = @"INSERT INTO Parking (Customer,
                                                              ContactDetails,
                                                              RegistrationNumber,
                                                              Description,
@@ -62,40 +63,94 @@ namespace Parkeringshus
                                                  @Arrival)";
 
 
-                        SqlConnection connection = new SqlConnection(connectionString);
-                        SqlCommand command = new SqlCommand(query, connection);
+                            SqlConnection connection = new SqlConnection(connectionString);
+                            SqlCommand command = new SqlCommand(query, connection);
 
-                        command.Parameters.AddWithValue("@Customer",customer);
-                        command.Parameters.AddWithValue("@ContactDetails", contactDetails);
-                        command.Parameters.AddWithValue("@RegistrationNumber", registrationNumber);
-                        command.Parameters.AddWithValue("@Description", description);
-                        command.Parameters.AddWithValue("@Arrival", arrival);
+                            command.Parameters.AddWithValue("@Customer", customer);
+                            command.Parameters.AddWithValue("@ContactDetails", contactDetails);
+                            command.Parameters.AddWithValue("@RegistrationNumber", registrationNumber);
+                            command.Parameters.AddWithValue("@Description", description);
+                            command.Parameters.AddWithValue("@Arrival", arrival);
 
-                        connection.Open();
+                            connection.Open();
 
-                        command.ExecuteNonQuery();
+                            command.ExecuteNonQuery();
 
-                        connection.Close();
+                            connection.Close();
 
-                        Clear();
+                            Clear();
 
-                        WriteLine("Parking registered.");
+                            WriteLine("Parking registered.");
 
-                        Thread.Sleep(2000);
+                            Thread.Sleep(2000);
 
-                        break;
+                            break;
+                        }
 
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
+                        {
+
+                        }
+                        break;
+
+                    case ConsoleKey.D3:
+                    case ConsoleKey.NumPad3:
+                        {
+                            WriteLine("ID   Registration number         Arrival      Departure");
+                            WriteLine("------------------------------------------------------------");
+
+                            string query = @"SELECT	Id, 
+		                                    Customer,
+		                                    ContactDetails,
+		                                    RegistrationNumber,
+		                                    Description,
+		                                    Arrival,
+		                                    Departure
+	                                    FROM Parking;";
+
+                            SqlConnection connection = new SqlConnection(connectionString);
+
+                            SqlCommand command = new SqlCommand(query, connection);
+
+                            connection.Open();
+
+                            SqlDataReader dataReader = command.ExecuteReader();
+
+                            while (dataReader.Read())
+                            {
+                                string id = dataReader["Id"].ToString();
+                                string registrationNumber = dataReader["RegistrationNumber"].ToString();
+                                string arrival = dataReader["Arrival"].ToString();
+                                string departure = dataReader["Departure"].ToString();
+
+
+                                Write(id.PadRight(5, ' '));
+                                Write(registrationNumber.PadRight(20, ' '));
+                                Write(arrival.PadRight(20, ' '));
+                                WriteLine(departure);
+
+                            }
+
+                            connection.Close();
+                            WriteLine();
+                            WriteLine("Press key to continue");
+
+                            ReadKey(true);
+
+
+
 
                         break;
 
+                        }
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
 
                         shouldNotExit = false;
 
                         break;
+                
                 }
 
                 Clear();
